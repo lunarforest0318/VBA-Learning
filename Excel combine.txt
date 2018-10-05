@@ -1,0 +1,43 @@
+Sub Macro2()
+'
+
+    Application.ScreenUpdating = False
+    Dim lj As String
+    Dim dirname As String
+    Dim nm As String
+    Dim o As Double
+    
+ 
+    lj = ActiveWorkbook.Path
+    nm = ActiveWorkbook.Name
+    dirname = Dir(lj & "\*.xls*")
+ 
+    Cells.Clear
+ 
+    Do While dirname <> ""
+        If dirname <> nm Then
+            Workbooks.Open Filename:=lj & "\" & dirname
+            Workbooks(nm).Activate
+            
+            For Each xWs In Workbooks(dirname).Sheets
+            xWs.Activate
+            Range("a1:am65536").Select
+      
+            Selection.Copy
+            Workbooks(nm).Activate
+            Sheets(1).Select
+            o = Sheets(1).[c1000000].End(xlUp).Row
+            Range("a" & o + 1).Select
+            ActiveSheet.Paste
+            Application.CutCopyMode = False
+            Next
+            
+       
+ 
+            Workbooks(dirname).Close False
+        End If
+        dirname = Dir
+    Loop
+ 
+'
+End Sub
