@@ -1,0 +1,39 @@
+Sub Export(File_Name)
+'Export the French Version
+   Dim oBaseWkBk    As Workbook
+   Dim oNewWkBk     As Workbook
+   Dim zSheets(50)   As String
+   Dim zNewFileName As String
+   Dim iCntr        As Integer
+   Dim k As Integer
+
+k = 0
+   
+For Each Sheet In ThisWorkbook.Sheets
+If Sheet.Name <> "Instructions" And Sheet.Name <> "Dict" Then
+   
+   zSheets(k) = Sheet.Name
+   k = k + 1
+End If
+Next
+
+    Set oBaseWkBk = ActiveWorkbook
+    Set oNewWkBk = Workbooks.Add
+   
+    For iCntr = 0 To k - 1
+       oBaseWkBk.Activate
+       Sheets(zSheets(iCntr)).Visible = True
+       Sheets(zSheets(iCntr)).Copy before:=Workbooks(oNewWkBk.Name).Sheets("Sheet1")
+       With oNewWkBk.Sheets(zSheets(iCntr)).UsedRange
+       .Value = .Value
+       End With
+    Next iCntr
+    
+    Application.DisplayAlerts = False
+    oNewWkBk.Sheets("Sheet1").Delete
+    oNewWkBk.SaveCopyAs ThisWorkbook.Path & "\" & File_Name & "(Fr).xlsx"
+     oNewWkBk.Close SaveChanges:=False
+     Workbooks.Open (ThisWorkbook.Path & "\" & File_Name & "(Fr).xlsx")
+    Application.DisplayAlerts = True
+    
+End Sub
